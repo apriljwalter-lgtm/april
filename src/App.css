@@ -410,6 +410,60 @@ main {
   animation: tilt 7s ease-in-out infinite;
 }
 
+.raven-btn {
+  position: relative;
+  display: block;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.raven-beak-top,
+.raven-beak-bottom {
+  transform-origin: 54px 21px;
+  transition: transform 0.15s;
+}
+
+.is-speaking .raven-head {
+  animation: quoth 0.5s ease-in-out 2;
+}
+
+.is-speaking .raven-beak-top {
+  transform: rotate(-14deg);
+}
+
+.is-speaking .raven-beak-bottom {
+  transform: rotate(16deg);
+}
+
+.raven-quote {
+  position: absolute;
+  bottom: 100%;
+  right: -10px;
+  margin-bottom: 6px;
+  padding: 0.3rem 0.7rem;
+  white-space: nowrap;
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--ink);
+  background: var(--parchment);
+  border-radius: 10px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+  animation: quote-in 2.6s ease-out forwards;
+  z-index: 5;
+}
+
+.raven-quote::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  right: 22px;
+  border: 7px solid transparent;
+  border-top-color: var(--parchment);
+}
+
 .curio-jar {
   width: 46px;
 }
@@ -577,13 +631,20 @@ main {
 
 /* ───────── Music ───────── */
 
-.records {
+.listening-room {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  gap: 2.5rem;
+  align-items: center;
+}
+
+.crate {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem 1rem;
   justify-items: center;
 }
 
@@ -591,9 +652,39 @@ main {
   text-align: center;
 }
 
+.record-btn {
+  display: block;
+  padding: 0;
+  border: 0;
+  background: none;
+  border-radius: 50%;
+  cursor: grab;
+  touch-action: none;
+  transition: opacity 0.2s, transform 0.3s;
+}
+
+.record-btn:hover {
+  transform: translateY(-4px) rotate(-8deg);
+}
+
+.record-btn:active {
+  cursor: grabbing;
+}
+
+.record-btn.is-lifted {
+  opacity: 0.2;
+}
+
+.sleeve {
+  width: 150px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 2px dashed rgba(184, 149, 74, 0.45);
+}
+
 .vinyl {
   --label: var(--purple);
-  width: 190px;
+  width: 150px;
   aspect-ratio: 1;
   border-radius: 50%;
   display: grid;
@@ -605,7 +696,6 @@ main {
     0 12px 30px rgba(0, 0, 0, 0.7),
     inset 0 0 0 2px #000;
   position: relative;
-  transition: transform 0.4s;
 }
 
 .vinyl::after {
@@ -629,134 +719,368 @@ main {
 
 .vinyl-label span {
   font-family: var(--font-accent);
-  font-size: 0.6rem;
+  font-size: 0.55rem;
   line-height: 1.1;
   color: #fff;
   opacity: 0.9;
 }
 
-.record:hover .vinyl {
-  animation: spin 1.8s linear infinite;
-}
-
 .record-name {
   font-family: var(--font-display);
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   color: var(--parchment);
-  margin: 1.1rem 0 0;
+  margin: 0.8rem 0 0;
 }
 
-/* ───────── Aesthetic ───────── */
-
-.vibes {
-  display: grid;
-  grid-template-columns: minmax(200px, 260px) 1fr;
-  gap: 2.5rem;
-  align-items: center;
+/* the floating record that follows your pointer while dragging */
+.vinyl-ghost {
+  position: fixed;
+  z-index: 100;
+  pointer-events: none;
+  transform: scale(1.06) rotate(-6deg);
+  filter: drop-shadow(0 18px 24px rgba(0, 0, 0, 0.6));
 }
 
-.potion-card {
-  margin: 0;
-  text-align: center;
-}
-
-.potion {
+.vinyl-ghost .vinyl {
   width: 100%;
-  max-width: 200px;
-  filter: drop-shadow(0 0 30px rgba(123, 75, 184, 0.6));
 }
 
-.potion-liquid {
-  animation: slosh 4s ease-in-out infinite;
-}
+/* ── turntable (top-down) ── */
 
-.bubble {
-  animation: rise 3.5s ease-in infinite;
-}
-
-.bubble.b2 {
-  animation-delay: 1.2s;
-}
-
-.bubble.b3 {
-  animation-delay: 2.1s;
-}
-
-.potion-card figcaption {
-  margin-top: 1rem;
-  font-size: 1.2rem;
-}
-
-.potion-card strong {
-  color: var(--purple-light);
-}
-
-.swatches {
-  display: flex;
-  justify-content: center;
-  gap: 6px;
-  margin-top: 0.6rem;
-}
-
-.swatches span {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  border: 1px solid rgba(232, 220, 194, 0.3);
-}
-
-.tarot-row {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1.5rem;
-}
-
-.tarot {
-  padding: 1.5rem 1.25rem 1.75rem;
+.turntable {
   text-align: center;
-  background: linear-gradient(180deg, var(--purple-deep), var(--ink-2) 70%);
-  border: 2px solid var(--gold);
-  outline: 1px solid rgba(184, 149, 74, 0.4);
-  outline-offset: -8px;
-  border-radius: 10px;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.5);
-  transition: transform 0.4s;
 }
 
-.tarot:nth-child(odd) {
-  transform: rotate(-2deg);
+.deck {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+  aspect-ratio: 400 / 320;
+  border-radius: 16px;
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.6);
+  transition: box-shadow 0.3s;
 }
 
-.tarot:nth-child(even) {
-  transform: rotate(2deg);
+.deck.is-target {
+  box-shadow:
+    0 24px 50px rgba(0, 0, 0, 0.6),
+    0 0 0 3px var(--purple-light),
+    0 0 40px rgba(201, 167, 255, 0.5);
 }
 
-.tarot:hover {
-  transform: rotate(0) translateY(-8px);
+.deck-art,
+.deck-arm {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
 
-.tarot-num {
-  font-family: var(--font-display);
-  color: var(--gold);
+.deck-arm {
+  pointer-events: none;
+}
+
+/* record sits on the platter: center (165,160), radius 125 of the 400×320 plinth */
+.platter-slot {
+  position: absolute;
+  left: 10%;
+  top: 10.9375%;
+  width: 62.5%;
+  aspect-ratio: 1;
+}
+
+.platter-slot .record-btn,
+.platter-slot .vinyl {
+  width: 100%;
+}
+
+.platter-slot .record-btn:hover {
+  transform: none;
+}
+
+.platter-slot .vinyl-label span {
+  font-size: clamp(0.55rem, 1.6vw, 0.8rem);
+}
+
+.vinyl.is-spinning,
+.strobe.is-spinning {
+  animation: spin 1.8s linear infinite; /* 33⅓ rpm */
+  animation-delay: 0.7s; /* let the needle land first */
+}
+
+.strobe {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.arm {
+  transform-box: view-box;
+  transform-origin: 350px 50px;
+  transform: rotate(0deg);
+  transition: transform 0.7s cubic-bezier(0.5, 0, 0.3, 1);
+}
+
+.arm.is-down {
+  transform: rotate(29deg);
+}
+
+.lamp {
+  fill: #3b1f1f;
+  transition: fill 0.3s;
+}
+
+.lamp.is-on {
+  fill: #ff5a5a;
+  filter: drop-shadow(0 0 4px #ff5a5a);
+}
+
+.now-playing {
+  margin: 1.1rem 0 0;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.now-playing strong {
+  color: var(--purple-light);
+  font-style: normal;
+}
+
+/* ───────── History ───────── */
+
+.timeline {
+  list-style: none;
   margin: 0;
-  letter-spacing: 0.2em;
+  padding: 0 0 1.5rem;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(230px, 1fr);
+  gap: 1.25rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-color: var(--gold) transparent;
+  /* the gold thread running through the years */
+  background: linear-gradient(90deg, transparent, var(--gold) 6%, var(--gold) 94%, transparent) 0 2.6rem / 100% 1px
+    no-repeat;
 }
 
-.tarot-symbol {
-  width: 72px;
-  height: 72px;
-  margin: 1rem 0;
+.era {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  scroll-snap-align: start;
 }
 
-.tarot h3 {
+.era-years {
+  font-family: var(--font-accent);
+  font-style: italic;
+  color: var(--gold);
+  font-size: 0.95rem;
+  height: 2rem;
+}
+
+.era-pin {
+  width: 12px;
+  height: 12px;
+  margin: 0.15rem 0 1rem;
+  transform: rotate(45deg);
+  background: var(--ink);
+  border: 1.5px solid var(--gold);
+}
+
+.era-card {
+  flex: 1;
+  width: 100%;
+  padding: 1.25rem 1.1rem 1.4rem;
+  text-align: center;
+  background: linear-gradient(180deg, rgba(61, 31, 92, 0.55), var(--ink-2) 75%);
+  border: 1px solid rgba(184, 149, 74, 0.45);
+  border-radius: 120px 120px 8px 8px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45);
+  transition: transform 0.35s, border-color 0.35s;
+}
+
+.era-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--gold);
+}
+
+.era-figure {
+  width: 96px;
+  height: 160px;
+  margin: 0.5rem auto 0.75rem;
+  display: block;
+  overflow: visible;
+  filter: drop-shadow(0 0 10px rgba(155, 111, 209, 0.55));
+}
+
+.era-fill {
+  fill: var(--purple-mid);
+  transition: fill 0.35s;
+}
+
+.era-arm {
+  fill: var(--purple);
+}
+
+.era-card:hover .era-fill {
+  fill: var(--purple-light);
+}
+
+.era-card h3 {
   color: var(--parchment);
-  font-size: 1.35rem;
+  font-size: 1.15rem;
 }
 
-.tarot p:last-child {
-  margin: 0.6rem 0 0;
+.era-garment {
+  margin: 0.3rem 0 0.7rem;
+  font-family: var(--font-accent);
+  font-style: italic;
+  color: var(--purple-light);
+  font-size: 1rem;
+}
+
+.era-note {
+  margin: 0;
+  color: var(--muted);
+  font-size: 1.02rem;
+  line-height: 1.5;
+}
+
+/* ───────── Moon ───────── */
+
+.moon-layout {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 3rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.moon-figure {
+  --glow: 0.5;
+  margin: 0;
+  width: 300px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  /* the unlit disc, in case the surface map is slow to load */
+  background: radial-gradient(circle at 50% 50%, #17121d, #0b0810);
+  box-shadow:
+    0 0 60px rgba(201, 167, 255, calc(var(--glow) * 0.6)),
+    0 0 140px rgba(155, 111, 209, calc(var(--glow) * 0.45));
+  transition: box-shadow 0.6s;
+}
+
+.moon-canvas {
+  display: block;
+  border-radius: 50%;
+}
+
+.moon-when {
+  margin: 0;
+  font-family: var(--font-accent);
+  font-style: italic;
+  color: var(--gold);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+}
+
+.moon-name {
+  margin: 0.2rem 0 0.6rem;
+  color: var(--parchment);
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+}
+
+.moon-lore {
+  margin: 0 0 1.25rem;
   color: var(--muted);
   font-style: italic;
+}
+
+.moon-stats {
+  display: flex;
+  gap: 2.5rem;
+  margin: 0 0 1.5rem;
+}
+
+.moon-stats dt {
+  font-family: var(--font-accent);
+  color: var(--gold);
+  font-size: 0.9rem;
+}
+
+.moon-stats dd {
+  margin: 0;
+  font-family: var(--font-display);
+  color: var(--purple-light);
+  font-size: 1.5rem;
+}
+
+.moon-scrub {
+  display: grid;
+  gap: 0.35rem;
+  max-width: 340px;
+  font-size: 1rem;
+  color: var(--text);
+}
+
+.moon-scrub input {
+  width: 100%;
+  accent-color: var(--purple-mid);
+}
+
+.moon-reset {
+  margin-top: 0.75rem;
+  padding: 0.35rem 1rem;
+  font: inherit;
+  font-size: 0.95rem;
+  color: var(--parchment);
+  background: transparent;
+  border: 1px solid var(--gold);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.moon-reset:hover:not(:disabled) {
+  background: rgba(184, 149, 74, 0.15);
+}
+
+.moon-reset:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.moon-upcoming {
+  list-style: none;
+  margin: 3.5rem 0 0;
+  padding: 1.75rem 0 0;
+  border-top: 1px solid rgba(184, 149, 74, 0.25);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  text-align: center;
+}
+
+.moon-mini {
+  display: block;
+  margin: 0 auto 0.6rem;
+  border-radius: 50%;
+  background: #0d0a12;
+  box-shadow: 0 0 18px rgba(201, 167, 255, 0.25);
+}
+
+.moon-upcoming-name {
+  margin: 0;
+  font-family: var(--font-display);
+  color: var(--parchment);
+  font-size: 0.95rem;
+}
+
+.moon-upcoming-date {
+  margin: 0.15rem 0 0;
+  color: var(--muted);
+  font-size: 0.95rem;
 }
 
 /* ───────── Footer ───────── */
@@ -901,17 +1225,6 @@ main {
   to { transform: rotate(360deg); }
 }
 
-@keyframes slosh {
-  0%, 100% { transform: translateX(0); }
-  50% { transform: translateX(-8px) translateY(2px); }
-}
-
-@keyframes rise {
-  0% { transform: translateY(0); opacity: 0; }
-  20% { opacity: 1; }
-  100% { transform: translateY(-50px); opacity: 0; }
-}
-
 @keyframes dangle {
   0%, 100% { transform: rotate(2deg); }
   50% { transform: rotate(-3deg); }
@@ -939,6 +1252,17 @@ main {
 @keyframes eyeglow {
   0%, 70%, 100% { opacity: 0.15; }
   80%, 90% { opacity: 1; }
+}
+
+@keyframes quoth {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-10deg) translateY(-2px); }
+}
+
+@keyframes quote-in {
+  0% { opacity: 0; transform: translateY(6px); }
+  10%, 80% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-4px); }
 }
 
 @keyframes tilt {
@@ -971,8 +1295,42 @@ main {
     justify-content: center;
   }
 
-  .vibes {
+  .listening-room {
     grid-template-columns: 1fr;
+  }
+
+  .vinyl,
+  .sleeve {
+    width: 120px;
+  }
+
+  .moon-layout {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 2rem;
+    text-align: center;
+  }
+
+  .moon-figure {
+    width: min(300px, 80vw);
+  }
+
+  .moon-canvas {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .moon-stats {
+    justify-content: center;
+  }
+
+  .moon-scrub {
+    margin: 0 auto;
+  }
+
+  .moon-upcoming {
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 1.75rem;
   }
 
   .shelf {

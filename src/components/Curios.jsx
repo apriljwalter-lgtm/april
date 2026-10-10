@@ -1,4 +1,5 @@
 // Creepy little objects that sit on the bookshelves between the books.
+import { useEffect, useState } from 'react'
 import { Candle } from './Ornaments'
 
 function Skull() {
@@ -21,19 +22,55 @@ function Skull() {
   )
 }
 
+function croak() {
+  const synth = window.speechSynthesis
+  if (!synth) return
+  synth.cancel()
+  const line = new SpeechSynthesisUtterance('Nevermore')
+  line.pitch = 0.2
+  line.rate = 0.6
+  synth.speak(line)
+}
+
+// Quoth the raven… (click him)
 function Raven() {
+  const [quoths, setQuoths] = useState(0)
+  const speaking = quoths > 0
+
+  useEffect(() => {
+    if (!quoths) return
+    const id = setTimeout(() => setQuoths(0), 2600)
+    return () => clearTimeout(id)
+  }, [quoths])
+
   return (
-    <svg viewBox="0 0 70 80" className="curio-raven">
-      <path d="M20 54 L4 76 L14 71 L12 79 L28 60 Z" fill="#0b0610" />
-      <path d="M22 60 C14 46 20 28 36 24 C48 22 54 32 52 44 C50 56 40 64 22 60 Z" fill="#0b0610" />
-      <path d="M26 40 C34 36 44 40 48 50" stroke="#2a1f36" strokeWidth="1.5" fill="none" />
-      <g className="raven-head">
-        <circle cx="46" cy="20" r="10" fill="#0b0610" />
-        <path d="M54 15 L68 21 L54 24 Z" fill="#1a1420" />
-        <circle cx="48" cy="18" r="1.6" fill="#c9a7ff" />
-      </g>
-      <path d="M32 62 V74 M40 60 V74 M28 74 H36 M36 74 H44" stroke="#3a2a20" strokeWidth="1.6" strokeLinecap="round" />
-    </svg>
+    <button
+      type="button"
+      className={`raven-btn ${speaking ? 'is-speaking' : ''}`}
+      aria-label="Ask the raven a question"
+      onClick={() => {
+        setQuoths((n) => n + 1)
+        croak()
+      }}
+    >
+      {speaking && (
+        <span className="raven-quote" key={quoths} role="status">
+          Nevermore.
+        </span>
+      )}
+      <svg viewBox="0 0 70 80" className="curio-raven" aria-hidden="true">
+        <path d="M20 54 L4 76 L14 71 L12 79 L28 60 Z" fill="#0b0610" />
+        <path d="M22 60 C14 46 20 28 36 24 C48 22 54 32 52 44 C50 56 40 64 22 60 Z" fill="#0b0610" />
+        <path d="M26 40 C34 36 44 40 48 50" stroke="#2a1f36" strokeWidth="1.5" fill="none" />
+        <g className="raven-head">
+          <circle cx="46" cy="20" r="10" fill="#0b0610" />
+          <path className="raven-beak-top" d="M54 15 L68 21 L54 21 Z" fill="#1a1420" />
+          <path className="raven-beak-bottom" d="M54 21 L68 21 L54 24 Z" fill="#1a1420" />
+          <circle cx="48" cy="18" r="1.6" fill="#c9a7ff" />
+        </g>
+        <path d="M32 62 V74 M40 60 V74 M28 74 H36 M36 74 H44" stroke="#3a2a20" strokeWidth="1.6" strokeLinecap="round" />
+      </svg>
+    </button>
   )
 }
 
@@ -98,7 +135,7 @@ const CURIOS = {
 export default function Curio({ type, extra = false }) {
   const Item = CURIOS[type]
   return (
-    <span className={`curio ${extra ? 'curio-extra' : ''}`} aria-hidden="true">
+    <span className={`curio ${extra ? 'curio-extra' : ''}`} aria-hidden={type === 'raven' ? undefined : true}>
       <Item />
     </span>
   )

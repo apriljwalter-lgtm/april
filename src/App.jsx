@@ -6,7 +6,8 @@ import Goals from './components/Goals'
 import Bookshelf from './components/Bookshelf'
 import Hobbies from './components/Hobbies'
 import Music from './components/Music'
-import Aesthetic from './components/Aesthetic'
+import History from './components/History'
+import MoonPhase from './components/MoonPhase'
 import Footer from './components/Footer'
 
 const NAV = [
@@ -16,7 +17,8 @@ const NAV = [
   ['shelf', 'Shelf'],
   ['hobbies', 'Hobbies'],
   ['music', 'Music'],
-  ['vibes', 'Vibes'],
+  ['history', 'History'],
+  ['moon', 'Moon'],
 ]
 
 export default function App() {
@@ -42,7 +44,8 @@ export default function App() {
         <Bookshelf />
         <Hobbies />
         <Music />
-        <Aesthetic />
+        <History />
+        <MoonPhase />
       </main>
       <Footer />
     </>
