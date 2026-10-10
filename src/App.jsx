@@ -17,7 +17,7 @@ const NAV = [
   ['shelf', 'Shelf'],
   ['hobbies', 'Hobbies'],
   ['music', 'Music'],
-  ['history', 'History'],
+  ['history', 'Fashion'],
   ['moon', 'Moon'],
 ]
 

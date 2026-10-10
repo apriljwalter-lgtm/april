@@ -16,7 +16,7 @@ export default function About() {
           </div>
           <div>
             <dt>After hours</dt>
-            <dd>Reader, fiber artist, collector of moods</dd>
+            <dd>Reader, fiber artist, fashion-history devotee</dd>
           </div>
           <div>
             <dt>Signature hue</dt>

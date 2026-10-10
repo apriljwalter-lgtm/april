@@ -99,3 +99,24 @@ export function Moon({ phase }) {
     </svg>
   )
 }
+
+// A seamstress's dress form with a tape measure draped over it.
+export function DressForm({ className = 'hobby-icon' }) {
+  return (
+    <svg viewBox="0 0 64 72" className={className} aria-hidden="true">
+      <path d="M32 50 V64 M22 70 L32 64 L42 70" stroke="#b8954a" strokeWidth="2" fill="none" strokeLinecap="round" />
+      <rect x="29" y="2" width="6" height="5" rx="1.5" fill="#b8954a" />
+      <path
+        d="M21 8 Q32 5 43 8 Q47 12 46 18 Q42 24 41 30 Q47 38 45 50 H19 Q17 38 23 30 Q22 24 18 18 Q17 12 21 8 Z"
+        fill="#7b4bb8"
+        stroke="#e8dcc2"
+        strokeWidth="1.2"
+      />
+      <path d="M32 8 V50" stroke="#c9a7ff" strokeWidth="0.8" strokeDasharray="2 2" />
+      <path d="M23 30 Q32 33 41 30" stroke="#c9a7ff" strokeWidth="0.8" fill="none" />
+      {/* tape measure */}
+      <path d="M17 12 Q24 20 28 34 Q30 44 26 56" stroke="#e8dcc2" strokeWidth="3" fill="none" />
+      <path d="M17 12 Q24 20 28 34 Q30 44 26 56" stroke="#2a1d14" strokeWidth="3" strokeDasharray="0.6 2.4" fill="none" />
+    </svg>
+  )
+}

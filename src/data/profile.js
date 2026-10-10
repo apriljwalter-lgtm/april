@@ -32,6 +32,13 @@ export const profile = {
       blurb:
         'Crochet and cross stitch — hooking skeins into something warm and wearable, and stitching tiny X’s into linen one by one. Every stitch a small spell, every project a little bit of patience made visible.',
     },
+    {
+      name: 'Fashion History',
+      icon: 'dressForm',
+      link: '#history',
+      blurb:
+        'Farthingales, bustles, and empire waists. I love what clothes reveal about the people who wore them, and the centuries of handwork stitched into every seam.',
+    },
   ],
 
   books: [
@@ -124,7 +131,15 @@ export const profile = {
 
   favoriteColor: { name: 'Purple', hex: '#7b4bb8' },
 
-  // Chapter VI timeline. `shape` picks the dress silhouette drawn in History.jsx.
+  // Chapter VI: why fashion history matters to me, shown above the timeline.
+  fashionHistory: {
+    intro: [
+      'Fashion history is one of my favorite rabbit holes. A hemline or a sleeve can tell you what a whole society feared, hoped for, and could afford.',
+      'As someone who crochets and cross-stitches, I can’t look at a Victorian gown without counting the hours of handwork in it. And it’s no accident my shelf is full of Austen: I love picturing her heroines in their muslin.',
+    ],
+  },
+
+  // `shape` picks the dress silhouette drawn in History.jsx; `shelf` links eras to books above.
   fashionEras: [
     {
       shape: 'medieval',
@@ -152,6 +167,7 @@ export const profile = {
       name: 'Regency',
       years: 'c. 1795–1820',
       garment: 'Empire-waist muslin gown',
+      shelf: 'seven Austen novels',
       note: 'After the French Revolution, fashion fled from corsets and silk toward Grecian simplicity. This is the world Jane Austen wrote in.',
     },
     {
@@ -173,6 +189,7 @@ export const profile = {
       name: 'Edwardian',
       years: 'c. 1901–1914',
       garment: 'S-bend corset & picture hat',
+      shelf: 'East of Eden, set in these very years',
       note: 'The “Gibson Girl” silhouette pushed the bust forward and the hips back. Hats were so laden with plumage that bird-protection laws followed.',
     },
     {

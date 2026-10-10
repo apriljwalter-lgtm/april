@@ -1,5 +1,5 @@
 import { profile } from '../data/profile'
-import { SectionTitle } from './Ornaments'
+import { DressForm, SectionTitle } from './Ornaments'
 
 function BookIcon() {
   return (
@@ -49,7 +49,7 @@ function YarnIcon() {
   )
 }
 
-const ICONS = { book: BookIcon, yarn: YarnIcon }
+const ICONS = { book: BookIcon, yarn: YarnIcon, dressForm: DressForm }
 
 export default function Hobbies() {
   return (
@@ -63,6 +63,11 @@ export default function Hobbies() {
               <Icon />
               <h3>{h.name}</h3>
               <p>{h.blurb}</p>
+              {h.link && (
+                <a className="hobby-link" href={h.link}>
+                  Take the tour through the ages →
+                </a>
+              )}
             </article>
           )
         })}

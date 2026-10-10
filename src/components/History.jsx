@@ -1,5 +1,5 @@
 import { profile } from '../data/profile'
-import { SectionTitle } from './Ornaments'
+import { DressForm, SectionTitle } from './Ornaments'
 
 const ARMS = ['M43 32 Q31 44 30 68 L34 69 Q36 50 45 38 Z', 'M57 32 Q69 44 70 68 L66 69 Q64 50 55 38 Z']
 
@@ -85,8 +85,17 @@ function Silhouette({ shape }) {
 export default function History() {
   return (
     <section className="section" id="history">
-      <SectionTitle eyebrow="Chapter VI">Through the Ages</SectionTitle>
-      <p className="section-intro">Six centuries of silhouettes, and the history that shaped them. Scroll sideways through time →</p>
+      <SectionTitle eyebrow="Chapter VI · A Passion of Mine">Through the Ages</SectionTitle>
+      <article className="parchment history-intro">
+        <DressForm className="history-intro-icon" />
+        <div>
+          <h3>Why I love fashion history</h3>
+          {profile.fashionHistory.intro.map((para) => (
+            <p key={para}>{para}</p>
+          ))}
+        </div>
+      </article>
+      <p className="section-intro history-hint">Six centuries of my favorite silhouettes. Scroll sideways through time →</p>
       <ol className="timeline">
         {profile.fashionEras.map((era) => (
           <li className="era" key={era.name}>
@@ -97,6 +106,7 @@ export default function History() {
               <h3>{era.name}</h3>
               <p className="era-garment">{era.garment}</p>
               <p className="era-note">{era.note}</p>
+              {era.shelf && <p className="era-shelf">❦ On my shelf: {era.shelf}</p>}
             </article>
           </li>
         ))}

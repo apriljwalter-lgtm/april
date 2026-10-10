@@ -625,6 +625,13 @@ main {
   height: 72px;
 }
 
+.hobby-link {
+  display: inline-block;
+  margin-top: 0.8rem;
+  font-family: var(--font-accent);
+  font-style: italic;
+}
+
 .hobby-icon-wide {
   width: 150px;
 }
@@ -848,6 +855,45 @@ main {
 
 /* ───────── History ───────── */
 
+.history-intro {
+  display: flex;
+  gap: 1.75rem;
+  align-items: center;
+  max-width: 760px;
+  margin: 0 auto 2.5rem;
+  padding: 1.75rem 2rem;
+}
+
+.history-intro-icon {
+  flex: none;
+  width: 90px;
+  height: 100px;
+}
+
+.history-intro h3 {
+  font-size: 1.3rem;
+  color: var(--purple-deep);
+  margin-bottom: 0.4rem;
+}
+
+.history-intro p {
+  margin: 0.5rem 0 0;
+}
+
+.history-hint {
+  margin: 0 0 1.5rem;
+}
+
+.era-shelf {
+  margin: 0.9rem 0 0;
+  padding-top: 0.7rem;
+  border-top: 1px dashed rgba(184, 149, 74, 0.45);
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--gold);
+}
+
 .timeline {
   list-style: none;
   margin: 0;
@@ -959,6 +1005,7 @@ main {
 
 .moon-figure {
   --glow: 0.5;
+  position: relative;
   margin: 0;
   width: 300px;
   aspect-ratio: 1;
@@ -974,6 +1021,47 @@ main {
 .moon-canvas {
   display: block;
   border-radius: 50%;
+}
+
+.witch {
+  position: absolute;
+  width: 40%;
+  translate: -50% -50%;
+  color: #0b0610;
+  fill: currentColor;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    left 0.35s ease-out,
+    top 0.35s ease-out,
+    opacity 0.6s;
+  /* a faint rim of moonlight so she shows against a dark moon too */
+  filter: drop-shadow(0 0 1.5px rgba(201, 167, 255, 0.9)) drop-shadow(0 0 8px rgba(155, 111, 209, 0.5));
+}
+
+.witch.is-flying {
+  opacity: 1;
+  transition:
+    left 0.35s ease-out,
+    top 0.35s ease-out,
+    opacity 0.2s;
+}
+
+.witch-art {
+  display: block;
+  overflow: visible;
+  transform: scaleX(var(--face, 1)) rotate(var(--tilt, 0deg));
+  transition: transform 0.35s;
+}
+
+.witch-bob {
+  animation: witch-bob 1.1s ease-in-out infinite;
+}
+
+.witch-cape {
+  transform-box: fill-box;
+  transform-origin: 100% 30%;
+  animation: cape-flutter 0.35s ease-in-out infinite alternate;
 }
 
 .moon-when {
@@ -1254,6 +1342,16 @@ main {
   80%, 90% { opacity: 1; }
 }
 
+@keyframes witch-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@keyframes cape-flutter {
+  from { transform: skewY(-5deg) scaleX(0.94); }
+  to { transform: skewY(4deg) scaleX(1.04); }
+}
+
 @keyframes quoth {
   0%, 100% { transform: rotate(0deg); }
   50% { transform: rotate(-10deg) translateY(-2px); }
@@ -1302,6 +1400,12 @@ main {
   .vinyl,
   .sleeve {
     width: 120px;
+  }
+
+  .history-intro {
+    flex-direction: column;
+    text-align: center;
+    padding: 1.5rem 1.25rem;
   }
 
   .moon-layout {

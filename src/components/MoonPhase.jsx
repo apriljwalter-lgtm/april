@@ -109,9 +109,56 @@ function Moon({ elong, size, className }) {
 const fmtDate = (d) => d.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })
 const fmtTime = (d) => d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })
 
+// A shadowy witch who rides across the moon while you scrub through the days.
+function Witch({ offset, dir, flying }) {
+  const t = (offset + 15) / 30 // 0 → 1 across the slider
+  const style = {
+    left: `${-12 + t * 124}%`,
+    top: `${58 - Math.sin(Math.PI * t) * 46}%`,
+    '--tilt': `${Math.cos(Math.PI * t) * -14 * dir}deg`,
+    '--face': dir,
+  }
+  return (
+    <div className={`witch ${flying ? 'is-flying' : ''}`} style={style} aria-hidden="true">
+      <svg viewBox="0 0 120 80" className="witch-art">
+        <g className="witch-bob">
+          {/* broom */}
+          <path d="M18 57 L116 49" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+          <path d="M0 50 Q12 52 22 54 L22 61 Q10 64 -2 70 Q6 62 0 50 Z" />
+          <path d="M3 54 L20 57 M2 63 L20 59" stroke="#2a1f36" strokeWidth="1" />
+          {/* cape and hair streaming behind */}
+          <path className="witch-cape" d="M56 31 Q38 32 24 44 Q36 44 32 52 Q42 46 48 51 Q46 42 58 38 Z" />
+          <path className="witch-cape" d="M65 21 Q54 20 46 27 Q55 25 62 28 Z" />
+          {/* body, arm, leg and boot */}
+          <path d="M48 56 Q46 40 56 30 Q64 26 70 32 Q74 44 71 55 Z" />
+          <path d="M66 36 Q76 42 88 49" stroke="currentColor" strokeWidth="3.4" fill="none" strokeLinecap="round" />
+          <path d="M60 55 L73 60 L71 67 L78 68" stroke="currentColor" strokeWidth="3.4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+          {/* head, nose, and a hat with a crooked tip */}
+          <circle cx="70" cy="24" r="6" />
+          <path d="M75 23 L83 27 L75 27.5 Z" />
+          <ellipse cx="68" cy="18.5" rx="13" ry="2.6" transform="rotate(-8 68 18.5)" />
+          <path d="M59 18 L77 16 Q68 8 50 1 Q60 9 59 18 Z" />
+        </g>
+      </svg>
+    </div>
+  )
+}
+
 export default function MoonPhase() {
   const [now, setNow] = useState(() => new Date())
   const [offset, setOffset] = useState(0) // days scrubbed away from tonight
+  const [flight, setFlight] = useState({ dir: 1, flying: false })
+  const landTimer = useRef(0)
+
+  const scrubTo = (next) => {
+    if (next === offset) return
+    setFlight({ dir: next > offset ? 1 : -1, flying: true })
+    clearTimeout(landTimer.current)
+    landTimer.current = setTimeout(() => setFlight((f) => ({ ...f, flying: false })), 1300)
+    setOffset(next)
+  }
+
+  useEffect(() => () => clearTimeout(landTimer.current), [])
 
   // Keep "tonight" fresh if the page is left open.
   useEffect(() => {
@@ -133,6 +180,7 @@ export default function MoonPhase() {
       <div className="moon-layout">
         <figure className="moon-figure" style={{ '--glow': (0.15 + lit * 0.55).toFixed(2) }}>
           <Moon elong={elong} size={300} className="moon-canvas" />
+          <Witch offset={offset} dir={flight.dir} flying={flight.flying} />
         </figure>
 
         <div className="moon-info" aria-live="polite">
@@ -158,10 +206,10 @@ export default function MoonPhase() {
               max={15}
               step={0.25}
               value={offset}
-              onChange={(e) => setOffset(Number(e.target.value))}
+              onChange={(e) => scrubTo(Number(e.target.value))}
             />
           </label>
-          <button type="button" className="moon-reset" onClick={() => setOffset(0)} disabled={offset === 0}>
+          <button type="button" className="moon-reset" onClick={() => scrubTo(0)} disabled={offset === 0}>
             Return to tonight
           </button>
         </div>
