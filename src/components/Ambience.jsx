@@ -15,7 +15,7 @@ const BATS = [
   { top: 9, duration: 34, delay: 17, scale: 0.55 },
 ]
 
-function Bat() {
+export function Bat() {
   return (
     <svg viewBox="0 0 60 24" width="60" height="24">
       <path

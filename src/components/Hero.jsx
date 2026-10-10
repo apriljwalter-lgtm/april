@@ -15,7 +15,7 @@ export default function Hero() {
       <p className="hero-kicker">Ex Libris · Est. by candlelight</p>
       <h1 className="hero-name">
         <span className="hero-the">the grimoire of</span>
-        {profile.name}
+        <span className="hero-signature">{profile.name}</span>
       </h1>
       <p className="hero-tagline">{profile.tagline}</p>
 
@@ -26,7 +26,7 @@ export default function Hero() {
       </div>
 
       <a className="hero-scroll" href="#work">
-        open the book <span aria-hidden="true">↓</span>
+        open the book <span aria-hidden="true">→</span>
       </a>
     </section>
   )

@@ -16,6 +16,7 @@
   --font-display: 'Cinzel Decorative', 'Cinzel', Georgia, serif;
   --font-body: 'Cormorant Garamond', Garamond, Georgia, serif;
   --font-accent: 'IM Fell English', Georgia, serif;
+  --font-script: 'Princess Sofia', 'Brush Script MT', cursive;
 
   color-scheme: dark;
 }
@@ -28,7 +29,6 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 4.5rem;
 }
 
 body {
@@ -45,7 +45,7 @@ body {
   font-size: 1.2rem;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+  overflow: hidden; /* the book's pages scroll, not the window */
 }
 
 /* faint vignette over everything */
