@@ -58,7 +58,7 @@ function BatFlurry({ bats }) {
  * when you move between them. Chapter links anywhere on the page (#work, #moon…) turn to
  * that page, the browser's back/forward buttons work, and ←/→ keys flip pages.
  */
-export default function Book({ chapters, onPageChange }) {
+export default function Book({ chapters, onPageChange, children }) {
   const [current, setCurrent] = useState(() => chapterFromHash(chapters))
   const [turn, setTurn] = useState(null) // { from, to, forward }
   const [flurry, setFlurry] = useState(null) // { id, bats } — bats outlive the turn itself
@@ -175,6 +175,20 @@ export default function Book({ chapters, onPageChange }) {
             </div>
           )
         })}
+
+        {/* Click the edge of the page, or its folded corner, to turn it like a real book. */}
+        {prev && (
+          <a className="page-edge page-edge-prev" href={`#${prev.id}`} aria-label={`Turn back to ${prev.label}`}>
+            <span className="page-edge-arrow" aria-hidden="true">‹</span>
+            <span className="dog-ear" aria-hidden="true" />
+          </a>
+        )}
+        {next && (
+          <a className="page-edge page-edge-next" href={`#${next.id}`} aria-label={`Turn the page to ${next.label}`}>
+            <span className="page-edge-arrow" aria-hidden="true">›</span>
+            <span className="dog-ear" aria-hidden="true" />
+          </a>
+        )}
       </div>
 
       {flurry && <BatFlurry key={flurry.id} bats={flurry.bats} />}
@@ -183,9 +197,12 @@ export default function Book({ chapters, onPageChange }) {
         <a className="pager-btn" href={prev ? `#${prev.id}` : undefined} aria-disabled={!prev}>
           <span aria-hidden="true">‹</span> {prev ? prev.label : ''}
         </a>
-        <span className="folio" aria-live="polite">
-          {shown === 0 ? 'Cover' : `— ${ROMAN[shown] ?? shown} —`}
-        </span>
+        <div className="pager-middle">
+          <span className="folio" aria-live="polite">
+            {shown === 0 ? 'Cover' : `— ${ROMAN[shown] ?? shown} —`}
+          </span>
+          {children}
+        </div>
         <a className="pager-btn pager-next" href={next ? `#${next.id}` : undefined} aria-disabled={!next}>
           {next ? next.label : ''} <span aria-hidden="true">›</span>
         </a>

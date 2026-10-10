@@ -55,8 +55,9 @@ export default function App() {
           ))}
         </ul>
       </nav>
-      <Book chapters={CHAPTERS} onPageChange={setPage} />
-      <EerieMusic />
+      <Book chapters={CHAPTERS} onPageChange={setPage}>
+        <EerieMusic />
+      </Book>
     </div>
   )
 }

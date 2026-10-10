@@ -64,6 +64,7 @@ export default function EerieMusic() {
       type="button"
       className={`music-toggle ${playing ? 'is-playing' : ''}`}
       aria-pressed={playing}
+      aria-label="Eerie music"
       onClick={toggle}
     >
       <span className="music-bars" aria-hidden="true">
@@ -71,7 +72,7 @@ export default function EerieMusic() {
         <span />
         <span />
       </span>
-      {playing ? 'Hush the music' : 'Eerie music'}
+      <span className="music-label">{playing ? 'Hush the music' : 'Eerie music'}</span>
     </button>
   )
 }
