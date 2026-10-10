@@ -406,6 +406,26 @@ main {
   width: 56px;
 }
 
+.curio-btn {
+  display: block;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.skull-jaw {
+  transform-box: fill-box;
+}
+
+.is-chattering .skull-jaw {
+  animation: chatter 0.085s ease-in-out 9 alternate;
+}
+
+.is-chattering .curio-skull {
+  animation: rattle 0.17s ease-in-out 4;
+}
+
 .skull-eye {
   animation: eyeglow 4s ease-in-out infinite;
 }
@@ -1466,7 +1486,7 @@ main {
   font-size: 0.95rem;
   color: var(--parchment);
   background: rgba(18, 11, 24, 0.85);
-  border: 1px solid rgba(184, 149, 74, 0.6);
+  border: 1px solid var(--gold);
   border-radius: 999px;
   cursor: pointer;
   transition: box-shadow 0.3s, background 0.3s;
@@ -1477,7 +1497,33 @@ main {
 }
 
 .music-toggle.is-playing {
-  box-shadow: 0 0 16px rgba(155, 111, 209, 0.55);
+  background: var(--purple);
+  border-color: var(--purple-light);
+  box-shadow: 0 0 18px rgba(201, 167, 255, 0.7);
+}
+
+.music-note {
+  font-style: normal;
+  font-size: 1.1rem;
+  line-height: 1;
+  color: var(--gold);
+}
+
+.is-playing .music-note {
+  color: var(--parchment);
+}
+
+.is-playing .music-bars span {
+  background: var(--parchment);
+}
+
+/* the bars only show while it's playing, so it's obvious where the sound is from */
+.music-toggle:not(.is-playing) .music-bars {
+  display: none;
+}
+
+.music-label-short {
+  display: none;
 }
 
 .music-bars {
@@ -1714,6 +1760,17 @@ main {
   to { transform: skewY(4deg) scaleX(1.04); }
 }
 
+@keyframes chatter {
+  from { transform: translateY(0); }
+  to { transform: translateY(4px); }
+}
+
+@keyframes rattle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-4deg); }
+  75% { transform: rotate(4deg); }
+}
+
 @keyframes quoth {
   0%, 100% { transform: rotate(0deg); }
   50% { transform: rotate(-10deg) translateY(-2px); }
@@ -1790,13 +1847,18 @@ main {
     gap: 0.5rem;
   }
 
-  /* just the dancing bars on phones */
+  /* a shorter label on phones */
   .music-label {
     display: none;
   }
 
+  .music-label-short {
+    display: inline;
+  }
+
   .music-toggle {
-    padding: 0.45rem 0.6rem;
+    gap: 0.4rem;
+    padding: 0.3rem 0.7rem;
   }
 
   .history-intro {

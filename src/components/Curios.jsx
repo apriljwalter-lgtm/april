@@ -2,23 +2,69 @@
 import { useEffect, useState } from 'react'
 import { Candle } from './Ornaments'
 
+// A few dry, bony clicks, quick and quiet.
+function clack() {
+  const Ctx = window.AudioContext || window.webkitAudioContext
+  if (!Ctx) return
+  const ctx = new Ctx()
+  const noise = ctx.createBuffer(1, ctx.sampleRate * 0.03, ctx.sampleRate)
+  const data = noise.getChannelData(0)
+  for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / data.length) ** 4
+  for (let i = 0; i < 9; i++) {
+    const src = ctx.createBufferSource()
+    const band = ctx.createBiquadFilter()
+    const gain = ctx.createGain()
+    src.buffer = noise
+    band.type = 'bandpass'
+    band.frequency.value = 2200 + Math.random() * 900
+    band.Q.value = 4
+    gain.gain.value = 0.35
+    src.connect(band).connect(gain).connect(ctx.destination)
+    src.start(ctx.currentTime + i * 0.085)
+  }
+  setTimeout(() => ctx.close(), 1200)
+}
+
+// Click him and his teeth chatter.
 function Skull() {
+  const [chatters, setChatters] = useState(0)
+
+  useEffect(() => {
+    if (!chatters) return
+    const id = setTimeout(() => setChatters(0), 800)
+    return () => clearTimeout(id)
+  }, [chatters])
+
   return (
-    <svg viewBox="0 0 60 64" className="curio-skull">
-      <path
-        d="M30 4 C14 4 6 16 6 28 C6 38 12 44 16 46 V58 H44 V46 C48 44 54 38 54 28 C54 16 46 4 30 4 Z"
-        fill="#d9cbb0"
-      />
-      <path d="M30 4 l-2 6 l3 4 l-2 5" stroke="#8a7a62" strokeWidth="1" fill="none" />
-      <ellipse cx="20" cy="30" rx="6" ry="7" fill="#120b18" />
-      <ellipse cx="40" cy="30" rx="6" ry="7" fill="#120b18" />
-      <circle className="skull-eye" cx="20" cy="31" r="1.8" fill="#c9a7ff" />
-      <circle className="skull-eye" cx="40" cy="31" r="1.8" fill="#c9a7ff" />
-      <path d="M30 36 l-3 7 h6 z" fill="#120b18" />
-      <g stroke="#120b18" strokeWidth="1.2">
-        <path d="M18 50 H42 M22 47 V58 M27 47 V58 M32 47 V58 M37 47 V58" />
-      </g>
-    </svg>
+    <button
+      type="button"
+      className={`curio-btn ${chatters ? 'is-chattering' : ''}`}
+      aria-label="Rattle the skull"
+      onClick={() => {
+        setChatters((n) => n + 1)
+        clack()
+      }}
+    >
+      <svg viewBox="0 0 60 64" className="curio-skull" aria-hidden="true">
+        {/* cranium and upper teeth */}
+        <path
+          d="M30 4 C14 4 6 16 6 28 C6 38 12 44 16 46 V50 H44 V46 C48 44 54 38 54 28 C54 16 46 4 30 4 Z"
+          fill="#d9cbb0"
+        />
+        <path d="M30 4 l-2 6 l3 4 l-2 5" stroke="#8a7a62" strokeWidth="1" fill="none" />
+        <ellipse cx="20" cy="30" rx="6" ry="7" fill="#120b18" />
+        <ellipse cx="40" cy="30" rx="6" ry="7" fill="#120b18" />
+        <circle className="skull-eye" cx="20" cy="31" r="1.8" fill="#c9a7ff" />
+        <circle className="skull-eye" cx="40" cy="31" r="1.8" fill="#c9a7ff" />
+        <path d="M30 36 l-3 7 h6 z" fill="#120b18" />
+        <path d="M22 46 V50 M27 46 V50 M32 46 V50 M37 46 V50" stroke="#120b18" strokeWidth="1.2" />
+        {/* lower jaw, which chatters */}
+        <g className="skull-jaw" key={chatters}>
+          <rect x="16" y="50" width="28" height="8" fill="#d9cbb0" />
+          <path d="M16 50.4 H44 M22 50 V58 M27 50 V58 M32 50 V58 M37 50 V58" stroke="#120b18" strokeWidth="1.2" />
+        </g>
+      </svg>
+    </button>
   )
 }
 
@@ -135,7 +181,7 @@ const CURIOS = {
 export default function Curio({ type, extra = false }) {
   const Item = CURIOS[type]
   return (
-    <span className={`curio ${extra ? 'curio-extra' : ''}`} aria-hidden={type === 'raven' ? undefined : true}>
+    <span className={`curio ${extra ? 'curio-extra' : ''}`} aria-hidden={type === 'raven' || type === 'skull' ? undefined : true}>
       <Item />
     </span>
   )
