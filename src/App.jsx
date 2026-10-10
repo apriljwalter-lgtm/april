@@ -23,16 +23,8 @@ const CHAPTERS = [
   { id: 'hobbies', label: 'Hobbies', content: <Hobbies /> },
   { id: 'music', label: 'Music', content: <Music /> },
   { id: 'history', label: 'Fashion', content: <History /> },
-  {
-    id: 'moon',
-    label: 'Moon',
-    content: (
-      <>
-        <MoonPhase />
-        <Footer />
-      </>
-    ),
-  },
+  { id: 'moon', label: 'Moon', content: <MoonPhase /> },
+  { id: 'end', label: 'The End', content: <Footer />, hideInNav: true },
 ]
 
 export default function App() {
@@ -46,13 +38,15 @@ export default function App() {
           ☾ April
         </a>
         <ul>
-          {CHAPTERS.map((c, i) => (
+          {CHAPTERS.map((c, i) =>
+            c.hideInNav ? null : (
             <li key={c.id}>
               <a href={`#${c.id}`} aria-current={i === page ? 'page' : undefined}>
                 {c.label}
               </a>
             </li>
-          ))}
+            ),
+          )}
         </ul>
       </nav>
       <Book chapters={CHAPTERS} onPageChange={setPage}>

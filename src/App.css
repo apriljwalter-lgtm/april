@@ -525,6 +525,45 @@ main {
   border: 2px solid rgba(232, 220, 194, 0.5);
   box-shadow: 0 0 16px rgba(155, 111, 209, 0.5);
   position: relative;
+  transition: box-shadow 0.4s, filter 0.4s;
+}
+
+.potion-btn {
+  position: relative;
+}
+
+.is-sparkling .shelf-bottle {
+  box-shadow:
+    0 0 26px rgba(201, 167, 255, 0.9),
+    0 0 50px rgba(155, 111, 209, 0.6);
+  filter: brightness(1.25);
+}
+
+/* the liquid, where sparkles swirl (clipped to the glass) */
+.bottle-liquid {
+  position: absolute;
+  inset: 18% 0 0;
+  overflow: hidden;
+  border-radius: 0 0 4px 4px;
+}
+
+/* sparkles that escape out of the neck aren't clipped */
+.bottle-escape {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 100%;
+  pointer-events: none;
+}
+
+.sparkle {
+  position: absolute;
+  background: #fff;
+  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+  filter: drop-shadow(0 0 3px #e9dcff);
+  opacity: 0;
+  animation: sparkle-rise 1.5s ease-out forwards;
 }
 
 .shelf-bottle::before {
@@ -1554,25 +1593,53 @@ main {
 
 /* ───────── Footer ───────── */
 
+/* the closing page of the book */
 .footer {
   position: relative;
   z-index: 2;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   text-align: center;
   padding: 4rem 1.25rem 3rem;
-  border-top: 1px solid rgba(184, 149, 74, 0.2);
+}
+
+.footer > svg:first-child {
+  width: 72px;
+  height: 72px;
+  margin-bottom: 1.25rem;
+  filter: drop-shadow(0 0 18px rgba(232, 220, 194, 0.45));
 }
 
 .footer-sign {
   font-family: var(--font-accent);
-  font-size: 1.4rem;
+  font-size: clamp(1.5rem, 4vw, 2.2rem);
   font-style: italic;
-  margin: 1rem 0 0.5rem;
+  margin: 1.5rem 0 1rem;
+}
+
+.footer .divider {
+  width: min(320px, 80%);
 }
 
 .footer-sign span {
-  font-family: var(--font-display);
+  margin-left: 0.15em;
+  font-family: var(--font-script);
   font-style: normal;
+  font-size: 1.6em;
   color: var(--purple-light);
+  text-shadow: 0 0 20px rgba(155, 111, 209, 0.5);
+}
+
+.footer-finis {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 7vw, 3.6rem);
+  color: var(--parchment);
+  letter-spacing: 0.1em;
+  text-shadow: 0 0 24px rgba(155, 111, 209, 0.45);
+  margin: 0;
 }
 
 .footer-small {
@@ -1758,6 +1825,13 @@ main {
 @keyframes cape-flutter {
   from { transform: skewY(-5deg) scaleX(0.94); }
   to { transform: skewY(4deg) scaleX(1.04); }
+}
+
+@keyframes sparkle-rise {
+  0% { opacity: 0; transform: translate(0, 0) scale(0.4) rotate(0deg); }
+  20% { opacity: 1; transform: translate(calc(var(--drift) * 0.3), calc(var(--rise) * 0.2)) scale(1.3) rotate(45deg); }
+  60% { opacity: 1; transform: translate(calc(var(--drift) * -0.4), calc(var(--rise) * 0.6)) scale(0.8) rotate(90deg); }
+  100% { opacity: 0; transform: translate(var(--drift), var(--rise)) scale(0.3) rotate(160deg); }
 }
 
 @keyframes chatter {

@@ -78,6 +78,88 @@ function croak() {
   synth.speak(line)
 }
 
+// A shimmering little arpeggio of glassy chimes.
+function chime() {
+  const Ctx = window.AudioContext || window.webkitAudioContext
+  if (!Ctx) return
+  const ctx = new Ctx()
+  ;[1568, 1976, 2349, 2637, 3136, 2637].forEach((freq, i) => {
+    const osc = ctx.createOscillator()
+    const gain = ctx.createGain()
+    const t = ctx.currentTime + i * 0.07
+    osc.type = 'sine'
+    osc.frequency.value = freq
+    gain.gain.setValueAtTime(0.0001, t)
+    gain.gain.exponentialRampToValueAtTime(0.07, t + 0.01)
+    gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.9)
+    osc.connect(gain).connect(ctx.destination)
+    osc.start(t)
+    osc.stop(t + 1)
+  })
+  setTimeout(() => ctx.close(), 1600)
+}
+
+// Sparkles drift up through the liquid; a few escape out of the bottle's neck.
+function makeSparkles() {
+  return Array.from({ length: 18 }, (_, i) => ({
+    escape: i < 5,
+    x: 10 + Math.random() * 80,
+    y: 55 + Math.random() * 40,
+    rise: 25 + Math.random() * 45,
+    drift: (Math.random() - 0.5) * 30,
+    size: 3 + Math.random() * 4,
+    delay: Math.random() * 0.8,
+  }))
+}
+
+// Click the purple potion and it fizzes with sparkles.
+function Potion() {
+  const [sparkles, setSparkles] = useState(null)
+
+  useEffect(() => {
+    if (!sparkles) return
+    const id = setTimeout(() => setSparkles(null), 2400)
+    return () => clearTimeout(id)
+  }, [sparkles])
+
+  const sparkle = (s, i) => (
+    <span
+      key={i}
+      className="sparkle"
+      style={{
+        left: `${s.x}%`,
+        top: `${s.escape ? 10 : s.y}%`,
+        width: s.size,
+        height: s.size,
+        '--rise': `-${s.escape ? s.rise + 30 : s.rise * 0.5}px`,
+        '--drift': `${s.drift}px`,
+        animationDelay: `${s.delay}s`,
+      }}
+    />
+  )
+
+  return (
+    <button
+      type="button"
+      className={`curio-btn potion-btn ${sparkles ? 'is-sparkling' : ''}`}
+      aria-label="Swirl the purple potion"
+      onClick={() => {
+        setSparkles({ id: Date.now(), list: makeSparkles() })
+        chime()
+      }}
+    >
+      <span className="shelf-bottle">
+        <span className="bottle-liquid">{sparkles?.list.filter((s) => !s.escape).map(sparkle)}</span>
+      </span>
+      {sparkles && (
+        <span className="bottle-escape" key={sparkles.id} aria-hidden="true">
+          {sparkles.list.filter((s) => s.escape).map(sparkle)}
+        </span>
+      )}
+    </button>
+  )
+}
+
 // Quoth the raven… (click him)
 function Raven() {
   const [quoths, setQuoths] = useState(0)
@@ -175,13 +257,13 @@ const CURIOS = {
   eyeJar: EyeJar,
   crystalBall: CrystalBall,
   candle: () => <Candle height={24} delay={0.6} />,
-  potion: () => <span className="shelf-bottle" />,
+  potion: Potion,
 }
 
 export default function Curio({ type, extra = false }) {
   const Item = CURIOS[type]
   return (
-    <span className={`curio ${extra ? 'curio-extra' : ''}`} aria-hidden={type === 'raven' || type === 'skull' ? undefined : true}>
+    <span className={`curio ${extra ? 'curio-extra' : ''}`} aria-hidden={['raven', 'skull', 'potion'].includes(type) ? undefined : true}>
       <Item />
     </span>
   )

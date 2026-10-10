@@ -1,5 +1,6 @@
 import { useEffect, useEffectEvent, useRef, useState } from 'react'
 import { chapterFromHash } from '../lib/chapters'
+import { playPageTurn } from '../lib/pageTurnSound'
 import { Bat } from './Ambience'
 
 const TURN_MS = 1100
@@ -73,7 +74,10 @@ export default function Book({ chapters, onPageChange, children }) {
     nav.current.turning = true
     setTurn({ from, to, forward })
     onPageChange?.(to)
-    if (!prefersReducedMotion()) setFlurry({ id: Date.now(), bats: makeFlurry(forward) })
+    if (!prefersReducedMotion()) {
+      setFlurry({ id: Date.now(), bats: makeFlurry(forward) })
+      playPageTurn(TURN_MS / 1000)
+    }
   })
 
   const goTo = useEffectEvent((i) => {
